@@ -1,9 +1,10 @@
 <template>
   <div>
     <h1>Articles</h1>
-
-    <div v-if="loading">
-      Loading...
+    <div v-for="article in articles" :key="article.id">
+      <h2>{{ article.title }}</h2>
+      <p>{{ article.summary }}</p>
+      <a :href="article.url">{{ article.url }}</a>
     </div>
   </div>
 </template>
@@ -12,8 +13,19 @@
 export default {
   data () {
     return {
-      loading: false,
       articles: []
+    }
+  },
+  created () {
+    this.fetchArticles();
+  },
+  methods: {
+    async fetchArticles () {
+      const response = await fetch('https://api.overbeck.tech/articles');
+
+      if (response.ok) {
+        this.articles = await response.json();
+      }
     }
   }
 }
